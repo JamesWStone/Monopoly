@@ -1,0 +1,426 @@
+{
+  "compatible_board_file": "spaces.json",
+  "position_indexing": "zero_based",
+  "cards_per_deck": {
+    "chance": 16,
+    "community_chest": 16
+  },
+  "action_rules": {
+    "amounts": "Amounts are integer pounds of game money.",
+    "go_salary_policy": {
+      "pass_or_land": "Collect the board GO salary once per crossing, including a move ending on GO. Never add a second salary just for landing on GO.",
+      "none": "Collect no GO salary during this movement."
+    },
+    "move_to": "Move forward to destination, wrapping around the board as needed.",
+    "move_to_nearest": "Find the next matching space in the forward direction, wrapping from position 39 to 0.",
+    "move_relative": "New position = (current position + offset) modulo the board space count.",
+    "resolve_destination": "Resolve the landed-on space after movement, including any further card draw. Apply rent_override to that landing only. Handle GO salary only once.",
+    "rent_override": "Override only rent due on an owned, unmortgaged destination. If unowned, use normal purchase or auction rules. Never charge rent to the owner themselves.",
+    "dice_multiplier": "When rent is due, roll two dice again if roll_new_dice is true, then multiply their total by multiplier.",
+    "multiply_normal_rent": "Multiply normal station rent, based on the number of stations owned, by multiplier.",
+    "go_to_jail": "Move straight to jail, mark the player as imprisoned and end the turn. Do not treat arrival as Just Visiting.",
+    "receive": "The bank gives amount to the drawing player.",
+    "pay": "The drawing player pays amount to the bank.",
+    "pay_each_player": "Pay amount_per_player to every other active player.",
+    "collect_from_each_player": "Each other active player pays amount_per_player to the drawing player.",
+    "pay_repairs": "Pay the bank: houses owned * amount_per_house + hotels owned * amount_per_hotel. A hotel counts once, without also counting the four houses it replaced.",
+    "get_out_of_jail_free": "Retain the card. Its holder may use it to leave jail without paying the release fee, or transfer it. After use, return it to its original deck.",
+    "insufficient_funds": "Apply normal asset sale, mortgage and bankruptcy rules when a required payment cannot be made."
+  },
+  "community_chest": [
+    {
+      "id": "community_chest_01",
+      "text": "Go: collect £200.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 0,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "community_chest_02",
+      "text": "Bank mistake: receive £200.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 200,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_03",
+      "text": "Medical bill: pay £50.",
+      "actions": [
+        {
+          "type": "pay",
+          "amount": 50,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_04",
+      "text": "Share sale: receive £50.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 50,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_05",
+      "text": "Jail release voucher.",
+      "actions": [
+        {
+          "type": "get_out_of_jail_free",
+          "keep_until_used": true,
+          "transferable": true,
+          "return_to_original_deck_after_use": true
+        }
+      ]
+    },
+    {
+      "id": "community_chest_06",
+      "text": "Enter jail immediately.",
+      "actions": [
+        {
+          "type": "go_to_jail",
+          "destination": 10,
+          "go_salary_policy": "none",
+          "set_in_jail": true,
+          "end_turn": true
+        }
+      ]
+    },
+    {
+      "id": "community_chest_07",
+      "text": "Holiday savings: receive £100.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 100,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_08",
+      "text": "Tax rebate: receive £20.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 20,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_09",
+      "text": "Birthday: everyone gives £10.",
+      "actions": [
+        {
+          "type": "collect_from_each_player",
+          "amount_per_player": 10,
+          "exclude_self": true
+        }
+      ]
+    },
+    {
+      "id": "community_chest_10",
+      "text": "Insurance payout: receive £100.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 100,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_11",
+      "text": "Hospital bill: pay £100.",
+      "actions": [
+        {
+          "type": "pay",
+          "amount": 100,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_12",
+      "text": "School bill: pay £50.",
+      "actions": [
+        {
+          "type": "pay",
+          "amount": 50,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_13",
+      "text": "Consulting payment: receive £25.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 25,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_14",
+      "text": "Street repairs: £40/house, £115/hotel.",
+      "actions": [
+        {
+          "type": "pay_repairs",
+          "amount_per_house": 40,
+          "amount_per_hotel": 115,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_15",
+      "text": "Beauty runner-up: receive £10.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 10,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "community_chest_16",
+      "text": "Inheritance: receive £100.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 100,
+          "counterparty": "bank"
+        }
+      ]
+    }
+  ],
+  "chance": [
+    {
+      "id": "chance_01",
+      "text": "Go: collect £200.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 0,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_02",
+      "text": "Advance to Trafalgar Square.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 24,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_03",
+      "text": "Advance to Mayfair.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 39,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_04",
+      "text": "Advance to Pall Mall.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 11,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_05",
+      "text": "Nearest station: double rent.",
+      "actions": [
+        {
+          "type": "move_to_nearest",
+          "space_type": "station",
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true,
+          "rent_override": {
+            "type": "multiply_normal_rent",
+            "multiplier": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "chance_06",
+      "text": "Nearest station: double rent.",
+      "actions": [
+        {
+          "type": "move_to_nearest",
+          "space_type": "station",
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true,
+          "rent_override": {
+            "type": "multiply_normal_rent",
+            "multiplier": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "chance_07",
+      "text": "Nearest utility: tenfold dice rent.",
+      "actions": [
+        {
+          "type": "move_to_nearest",
+          "space_type": "utility",
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true,
+          "rent_override": {
+            "type": "dice_multiplier",
+            "multiplier": 10,
+            "roll_new_dice": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "chance_08",
+      "text": "Dividend: receive £50.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 50,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "chance_09",
+      "text": "Jail release voucher.",
+      "actions": [
+        {
+          "type": "get_out_of_jail_free",
+          "keep_until_used": true,
+          "transferable": true,
+          "return_to_original_deck_after_use": true
+        }
+      ]
+    },
+    {
+      "id": "chance_10",
+      "text": "Move backwards three spaces.",
+      "actions": [
+        {
+          "type": "move_relative",
+          "offset": -3,
+          "go_salary_policy": "none",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_11",
+      "text": "Enter jail immediately.",
+      "actions": [
+        {
+          "type": "go_to_jail",
+          "destination": 10,
+          "go_salary_policy": "none",
+          "set_in_jail": true,
+          "end_turn": true
+        }
+      ]
+    },
+    {
+      "id": "chance_12",
+      "text": "Building repairs: £25/house, £100/hotel.",
+      "actions": [
+        {
+          "type": "pay_repairs",
+          "amount_per_house": 25,
+          "amount_per_hotel": 100,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "chance_13",
+      "text": "Speeding penalty: pay £15.",
+      "actions": [
+        {
+          "type": "pay",
+          "amount": 15,
+          "counterparty": "bank"
+        }
+      ]
+    },
+    {
+      "id": "chance_14",
+      "text": "Visit King's Cross Station.",
+      "actions": [
+        {
+          "type": "move_to",
+          "destination": 5,
+          "direction": "forward",
+          "go_salary_policy": "pass_or_land",
+          "resolve_destination": true
+        }
+      ]
+    },
+    {
+      "id": "chance_15",
+      "text": "Chairperson: pay everyone £50.",
+      "actions": [
+        {
+          "type": "pay_each_player",
+          "amount_per_player": 50,
+          "exclude_self": true
+        }
+      ]
+    },
+    {
+      "id": "chance_16",
+      "text": "Building loan: receive £150.",
+      "actions": [
+        {
+          "type": "receive",
+          "amount": 150,
+          "counterparty": "bank"
+        }
+      ]
+    }
+  ]
+}
