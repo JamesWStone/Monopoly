@@ -1,10 +1,10 @@
 class Player(object):
     def __init__(self, id, name, money, position):
-        self.id = id
-        self.name = name
-        self.money = money
-        self.position = position
-        self.properties = []
+        self.id = id # index 0
+        self.name = name # index 1
+        self.money = money # index 2
+        self.position = position # index 3
+        self.properties = [] # index 4
 
     def __repr__(self):
         return (
@@ -28,6 +28,6 @@ def initPlayers():
     players = []
     for i in range(playerAmount):
         name = input(f"Player {i+1}, what is your name? \n")
-        players.append(Player(i+1, name, 1500, 0))
+        players.append(Player(i, name, 1500, 0))
     return players, playerAmount
 
